@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <h1>Dynamic page</h1>
+    <p>To illustrate this, we add a variable in the java class HomeController and then use that variable in the
+        home.html page (the view). <br>
+        To pass data between the Controller and the View we use a Model.</p>
+</div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/qStart">Quickstart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/dPage">Dynamic page</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    To pass data between the Controller and the View we use a Model.
+    <ul>
+        <li>in the HomeController class add a field “applicationName” of type String and initialize it with value
+            "Party!"
+        </li>
+        <li>Modify the Controller method so that the View can use our new field (via the Model):
+            <ul>
+                <li>Add a parameter to the home() method with name model and type Model</li>
+                <li>import the suggested packages</li>
+                <li>Spring will see that your method needs the model and will pass it when it calls the method</li>
+            </ul>
+        </li>
+        <li>Now add the field applicationName to the model:
+            <ul>
+                <li>Use the method addAttribute of Model.</li>
+                <li>The attribute is stored as a key-value-pair. The 2 parameters of addAttribute are the key and the
+                    value.
+                </li>
+            </ul>
+        </li>
+        <li>Result:
+            <ul>
+                <li>
+                <pre>
+                    <code>
+@GetMapping("/")
+public String home(Model model) {
+    model.addAttribute("appName", applicationName);
+    return "home";
+}
+                    </code>
+                </pre>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    Now you can activate Thymeleaf for that html page:
+    <ul>
+        <li>We use Thymeleaf as a template engine. Thymeleaf makes it possible to mix Java and html.</li>
+        <li>At the top of the html page, replace the &gt;!DOCTPYPE…&lt; and the &gt;html&lt; tags with these 2 lines:
+        </li>
+    </ul>
+    <pre><code>
+        &lt;!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd"&gt;
+        &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"&gt;
+    </code></pre>
+    <ul>
+        <li>Now you can use the variable we added in the Model: <br>
+            &lt;h1 th:text="${<code>appName</code>}"&gt;app&lt;/h1&gt; <br>
+            The attribute <code>th:text</code> is a <em>Thymeleaf</em> Model attribute.
+        </li>
+    <li>Restart the app in IntelliJ and refresh the browser</li>
+    </ul>
+    <p>
+        The home() method in <code>HomeController.java</code> we’ve modified is designed to take a String parameter called <em>applicationName</em>.
+        This means that if you set this parameter to “Party!” in the request, the
+        response would be “Party!” in home page.
+        <a href="/">Click here to see the result</a>
+    </p>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

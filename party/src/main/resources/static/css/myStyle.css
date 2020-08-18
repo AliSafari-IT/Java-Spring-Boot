@@ -1,0 +1,57 @@
+
+body {
+    margin: 2em;
+    color: #fff;
+    background-color: #000;
+}
+
+/* override styles when printing */
+@media print {
+    body {
+        margin: 0;
+        color: #000;
+        background-color: #fff;
+    }
+
+    header, footer, aside, nav, form, iframe, .menu, .hero, .adslot {
+        display: none;
+    }
+}
+
+h1 {
+    color: #0505e7;
+    font-size: 44px;
+    text-transform: uppercase;
+
+    border: 1px solid red;
+    margin: 10px;
+    padding: 5px;
+}
+
+p,h3 {
+    color: #6a0101;
+    line-height: 100px;
+}
+
+#myDIV {
+    width: 300px;
+    height: 200px;
+    background: red;
+    animation: mymove 5s infinite;
+    text-align: center;
+    margin: auto;
+}
+
+@keyframes mymove {
+    from {background-color: red;}
+    to {background-color: blue;}
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    right: 30px;
+    height:50px;
+    color: white;
+    font-size: x-large;
+}

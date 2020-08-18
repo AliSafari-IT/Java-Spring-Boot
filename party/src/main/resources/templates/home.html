@@ -1,0 +1,148 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .centerImg {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+        }
+
+        caption {
+            display: table-caption;
+            text-align: center;
+        }
+        h1{
+            font-size: 3em;
+            font-weight: bold;
+        }
+        h2{
+            font-size: 2.25em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <h1>My First Java Spring Boot Project</h1>
+    <p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just
+        run".</p>
+    <h1 th:text="${appName}">app</h1>
+</div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/qStart">Quickstart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Intro</h2>
+    Spring Boot is an open source Java-based framework used to create a micro Service. It is developed by Pivotal Team
+    and is used to build stand-alone and production ready spring applications. This webapp will give you an
+    introduction to Spring Boot and familiarizes you with its basic concepts.
+    <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a href="/qStart">Spring Quickstart Guide</a></p>
+    <div>
+        <h3 id="variableInPage">Exercise: use variables in the pages</h3>
+        <ul>
+            <li>Create a view called <em>blabla</em></li>
+            <li>Display the same variable (<code>applicationName</code>)</li>
+            <li>Add another field in the HomeController class and use the field</li>
+            <li>Add a css file in folder resources/static/css and style the page</li>
+            <li>Add a link to the home page</li>
+        </ul>
+        <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a id="blablaExercise" href="/blabla">See result</a>
+        </p>
+    </div>
+    <h2>MVC = Model–View–Controller</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <dl>
+                <dt>Model</dt>
+                <dd>The central component of the pattern. It is the application's dynamic data structure, independent of
+                    the
+                    user interface. It directly manages the data, logic and rules of the application.
+                </dd>
+                <dt>View</dt>
+                <dd>Any representation of information such as a chart, diagram or table. Multiple views of the same
+                    information
+                    are possible, such as a bar chart for management and a tabular view for accountants.
+                </dd>
+                <dt>Controller</dt>
+                <dd>Accepts input and converts it to commands for the model or view.</dd>
+            </dl>
+            <p>In addition to dividing the application into these components, the model–view–controller design defines
+                the
+                interactions between them.
+            </p>
+            <ul>
+                <li>The model is responsible for managing the data of the application. It receives user input from the
+                    controller.
+                </li>
+                <li>The view means presentation of the model in a particular format.</li>
+                <li>The controller responds to the user input and performs interactions on the data model objects. The
+                    controller receives the input, optionally validates it and then passes the input to the model.
+                </li>
+            </ul>
+            <p>As with other software patterns, MVC expresses the "core of the solution" to a problem while allowing it
+                to be
+                adapted for each system. Particular MVC designs can vary significantly from the traditional description
+                here.
+            </p>
+        </div>
+        <div class="col-md-4">
+            <table>
+                <caption style="caption-side:bottom">MVC is a pattern that is commonly used in software engineering.
+                </caption>
+                <tr>
+                    <td>
+                        <img class="centerImg" src="https://upload.wikimedia.org/wikipedia/commons/a/a0/MVC-Process.svg"
+                             alt="Diagram of interactions within the MVC pattern">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <h2>Spring Path Variables with Thymeleaf</h2>
+    <p>We use path variables when we want to pass a value as part of the URL. In a Spring controller, we access these
+        values using the <a
+                href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/PathVariable.html"><em>@PathVariable</em></a>
+        annotation. A PathVariable can be used to pass a variable from one page to another.</p>
+    <ul>
+        <li>Add a new page Venue with a <em>Requesthandler</em> <code>venue()</code> in the <em>HomeController</em> with the Model parameter.</li>
+        <li>Add a new parameter String <code>venueName</code> to this method</li>
+        <li>Mark this parameter as a <em>PathVariable</em></li>
+
+    </ul>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
