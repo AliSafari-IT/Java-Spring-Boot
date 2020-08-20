@@ -34,8 +34,8 @@ p,h3 {
 }
 
 #myDIV {
-    width: 300px;
-    height: 200px;
+    width: 400px;
+    height: 250px;
     background: red;
     animation: mymove 5s infinite;
     text-align: center;
@@ -54,4 +54,24 @@ footer{
     height:50px;
     color: white;
     font-size: x-large;
+}
+
+a.buttonLook {
+    display: block;
+    background-color: #EDC7CF;
+    color: #6A8E7F;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 1px 1px 1px darkgrey;
+    padding: 1em;
+}
+
+a.buttonLook:hover {
+    background-color: #6A8E7F;
+    color: #EDC7CF;
+}
+
+a.buttonLook:active {
+    background-color: #6A8E7F;
+    color: #EDC7CF;
 }

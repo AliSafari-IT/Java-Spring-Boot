@@ -11,16 +11,14 @@
 </head>
 <body>
 <div id="myDIV">
-    <th:block th:if="venArr" >
-    <h1 th:text="${appName}">app</h1>
-    <h3  th:text="${wMsg}">Welcome!</h3>
-    <p class="text-secondary display-4 mt-5 pt-5 font-weight-bold">
+    <h1 th:if="${vName}"><p th:text="${vName}">Venue</p></h1>
+    <p th:unless="${vName}"> No Venue Was Chosen! </p>
+    <h3 th:text="${wMsg}">Welcome!</h3>
+    <p class="text-secondary display-4 m-5 font-weight-bold">
         <span th:text="|${vName}|">Venue!</span> <i class="fas fa-glass-cheers"></i>
     </p>
-    <p><a href="/#venueList" class="text-light text-right">Back to the venue list </a></p>
-    </th:block>
+    <p><a href="/#venueList" class="text-light text-right">Back to the venue list</a></p>
 </div>
-
 
 <footer>
     <a href="/" class="text-light">Go to home page</a>
