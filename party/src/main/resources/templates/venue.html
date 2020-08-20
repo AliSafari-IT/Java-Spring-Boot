@@ -10,15 +10,51 @@
     <link rel="stylesheet" href="/css/myStyle.css">
 </head>
 <body>
-<div id="myDIV">
-    <th:block th:if="venArr" >
-    <h1 th:text="${appName}">app</h1>
-    <h3  th:text="${wMsg}">Welcome!</h3>
-    <p class="text-secondary display-4 mt-5 pt-5 font-weight-bold">
-        <span th:text="|${vName}|">Venue!</span> <i class="fas fa-glass-cheers"></i>
-    </p>
-    <p><a href="/#venueList" class="text-light text-right">Back to the venue list </a></p>
-    </th:block>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div id="myDIV">
+            <h1 th:text="${appName}">app</h1>
+            <h3 th:text="${wMsg}">Welcome!</h3>
+            <p class="text-secondary display-4 mt-5 pt-5 font-weight-bold">
+
+                <span th:if="${venue}" th:text="|${venue.getVenueName()}|">Venue!</span> <i
+                    class="fas fa-glass-cheers"></i>
+                <span th:unless="${venue}" th:text="|${vName}|">Venue!</span> <i class="fas fa-glass-cheers"></i>
+
+            </p>
+            <p th:if="${venue}"><a href="/#venueList2" class="text-light text-right">Back to the venue list </a></p>
+            <p th:unless="${venue}"><a href="/#venueList" class="text-light text-right">Back to the venue list </a></p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div th:if="${venue}">
+            <h2 th:text="${venue.venueName}">venue</h2>
+            <div class="venueinfo">
+                <div class="infoLine">
+                    <div class="infoLineName">max number of people:</div>
+                    <div class="infoLineValue"
+                         th:text="${venue.infoAvailableMaxNumberOfPersons} ? ${venue.maxNumberOfPersons}: 'unknown'">77
+                    </div>
+                </div>
+                <div class="infoLine">
+                    <div class="infoLineName">are own drinks allowed:</div>
+                    <div class="infoLineValue" th:text="${venue.ownDrinkAllowed}">yes</div>
+                </div>
+                <div class="infoLine">
+                    <div class="infoLineName">is food possible:</div>
+                    <div class="infoLineValue" th:text="${venue.isFoodPossible()}">yes</div>
+                </div>
+                <div class="infoLine">
+                    <div class="infoLineName">more info:</div>
+                    <div class="infoLineValue"><a th:text="${venue.linkMoreInfo}"
+                                                  th:href="${venue.linkMoreInfo}"
+                                                  class="linkLook"
+                                                  target="_blank">more_info_link</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

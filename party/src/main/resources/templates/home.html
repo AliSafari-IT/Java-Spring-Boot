@@ -34,7 +34,7 @@
 </head>
 <body>
 <div class="jumbotron text-center" style="margin-bottom:0">
-    <h1>My First Java Spring Boot Project</h1>
+    <h1>Herkansing: Java Spring Boot Project</h1>
     <p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just
         run".</p>
     <h1 th:text="${appName}">app</h1>
@@ -50,7 +50,7 @@
                 <a class="nav-link" href="/qStart">Quickstart</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#PathVariables">Path Variables</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
@@ -127,8 +127,7 @@
         </div>
     </div>
 
-
-    <h2>Spring Path Variables with Thymeleaf</h2>
+    <h2 id="PathVariables">Spring Path Variables with Thymeleaf</h2>
     <p>We use path variables when we want to pass a value as part of the URL. In a Spring controller, we access these
         values using the <a
                 href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/PathVariable.html"><em>@PathVariable</em></a>
@@ -254,7 +253,7 @@ public String home(Model model) {
                 </div>
             </div>
         </div>
-        <div class="display-4">
+        <div id="TConditional" class="display-4">
             Thymeleaf Conditional Evaluation
         </div>
 
@@ -326,27 +325,29 @@ public String home(Model model) {
 };
             </pre>
             <p>We will use this array of Venue objects here in the home page below:</p>
-            <div class="jumbotron">
-                <h3>List of venues from the venue array</h3>
-                <table class="table" id="VenueList">
-                    <tr>
-                        <th>ID</th>
-                        <th>Venue Name</th>
-                    </tr>
+            <div  id="venueList2" class="jumbotron row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <table class="table table-bordered table-striped text-center">
+                        <caption>List of venues from the venue array</caption>
+                        <tr>
+                            <th>ID</th>
+                            <th>Venue Name</th>
+                        </tr>
 
-                    <tr th:each="ven : ${venArr}">
-                        <td>
-                            <a th:text="${venStat.count}" th:href="${'/venue?id=' + ven.getId()}" href="venue.html"
-                               class="btn btn-secondary buttonLook"></a>
-                        </td>
-                        <td>
-                            <a th:text="${ven.getVenueName()}" th:href="${'/venue/'+ven.getVenueName()}" href="venue.html"
-                               class="btn btn-secondary buttonLook"></a>
-                        </td>
-                    </tr>
+                        <tr th:each="ven : ${venArr}">
+                            <td th:text="${venStat.count}">
+                            </td>
+                            <td>
+                                <a th:text="${ven.getVenueName()}" th:href="${'/venue/id/'+(ven.getId()+1)}"
+                                   href="venue.html"
+                                   class="btn btn-secondary buttonLook" style="width: 100%"></a>
+                            </td>
+                        </tr>
 
-                </table>
-
+                    </table>
+                </div>
+                <div class="col-md-3"></div>
             </div>
         </div>
         <p>To set up an example we create an array of guests for a party:</p>

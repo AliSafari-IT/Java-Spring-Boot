@@ -12,8 +12,6 @@ public class HomeController {
     private final String applicationName = "Party!";
     private final String welcomeMSG = "Welcome to the Party!";
     private String venueName;
-    private int venueId = 0;
-    private String vID;
     private int pGuestID = 0;
     private final String[] venueNames = {"De Club", "De Loods", "De Hanger", "Zapoi", "Kuub", "Cuba Libre"};
     private Venue[] venueArray = {
@@ -31,9 +29,13 @@ public class HomeController {
             new PartyGuest(3, "Kian", "Male"),
             new PartyGuest(4, "Tara", "Female")};
 
+    private void GetAppMsg(Model model){
+        model.addAttribute("appName", applicationName);
+        model.addAttribute("wMsg",welcomeMSG);
+    }
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("appName", applicationName);
+        GetAppMsg (model);
         model.addAttribute("vNames", venueNames);
         model.addAttribute("venArr", venueArray);
         return "home";
@@ -56,8 +58,7 @@ public class HomeController {
 
     @GetMapping("/blabla")
     public String blabla(Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("wMsg", welcomeMSG);
+        GetAppMsg (model);
         return "blabla";
     }
 
@@ -65,28 +66,31 @@ public class HomeController {
     public String venue(
             @PathVariable(required = false) String venueName,
             Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("wMsg", welcomeMSG);
+        GetAppMsg (model);
+        model.addAttribute("vNames", venueNames);
         model.addAttribute("vName", (venueName != null) ? venueName : "Boesj");
+        return "venue";
+    }
+
+    @GetMapping({"/venue/id/{venID}"})
+    public String venueId(Model model, @PathVariable int venID) {
+        GetAppMsg (model);
         model.addAttribute("venArr", venueArray);
-        model.addAttribute("venue", venueArray[venueId]);
-        model.addAttribute("idOfPrevVenue", venueId > 0 ? venueId - 1 : venueArray.length - 1);
-        model.addAttribute("idOfNextVenue", venueId < venueArray.length - 1 ? venueId + 1 : 0);
+        model.addAttribute("venID", venID);
+        model.addAttribute("venue", venueArray[(venID-1)]);
         return "venue";
     }
 
     @GetMapping({"/venueIF", "/venueIF/{venueName}"})
     public String venueIF(@PathVariable(required = false) String venueName, Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("wMsg", welcomeMSG);
+        GetAppMsg (model);
         model.addAttribute("vName", venueName);
         return "venueIF";
     }
 
     @GetMapping({"/guest", "/guest/{pGuestID}"})
     public String guest(@PathVariable(required = false) int pGuestID, Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("wMsg", welcomeMSG);
+        GetAppMsg (model);
         model.addAttribute("pGuests", pGuests);
         model.addAttribute("pGuestID", (pGuestID > 0 && pGuestID < pGuests.length) ? pGuestID : 0);
         return "guest";
