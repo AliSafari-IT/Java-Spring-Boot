@@ -1,9 +1,77 @@
 
 body {
-    margin: 2em;
-    color: #fff;
-    background-color: #000;
+    margin: .25em;
 }
+
+h1 {
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 10px;
+    padding: 5px;
+}
+
+h2 {
+    font-size: 2.25em;
+    font-weight: bold;
+}
+.centerImg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+caption {
+    display: table-caption;
+    text-align: center;
+}
+
+
+
+#myDIV {
+    width: 100%;
+    background: red;
+    animation: mymove 5s infinite;
+    text-align: center;
+    margin: auto;
+}
+
+@keyframes mymove {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: blue;
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    font-size: 14px;
+}
+
+.buttonLook {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+}
+
+a.buttonLook:hover {
+    background-color: #000704;
+    color: #187ffc;
+}
+
+a.buttonLook:active {
+    background-color: #6A8E7F;
+    color: #f18aa0;
+}
+
 
 /* override styles when printing */
 @media print {
@@ -16,62 +84,4 @@ body {
     header, footer, aside, nav, form, iframe, .menu, .hero, .adslot {
         display: none;
     }
-}
-
-h1 {
-    color: #0505e7;
-    font-size: 44px;
-    text-transform: uppercase;
-
-    border: 1px solid red;
-    margin: 10px;
-    padding: 5px;
-}
-
-p,h3 {
-    color: #6a0101;
-    line-height: 100px;
-}
-
-#myDIV {
-    width: 400px;
-    height: 250px;
-    background: red;
-    animation: mymove 5s infinite;
-    text-align: center;
-    margin: auto;
-}
-
-@keyframes mymove {
-    from {background-color: red;}
-    to {background-color: blue;}
-}
-
-footer{
-    position: absolute;
-    bottom: 0;
-    right: 30px;
-    height:50px;
-    color: white;
-    font-size: x-large;
-}
-
-a.buttonLook {
-    display: block;
-    background-color: #EDC7CF;
-    color: #6A8E7F;
-    text-decoration: none;
-    text-align: center;
-    box-shadow: 1px 1px 1px darkgrey;
-    padding: 1em;
-}
-
-a.buttonLook:hover {
-    background-color: #6A8E7F;
-    color: #EDC7CF;
-}
-
-a.buttonLook:active {
-    background-color: #6A8E7F;
-    color: #EDC7CF;
 }

@@ -1,63 +1,19 @@
 <!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-
 <head>
-    <meta charset="UTF-8">
-    <title>Spring Boot</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .centerImg {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 80%;
-        }
-
-        caption {
-            display: table-caption;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3em;
-            font-weight: bold;
-        }
-
-        h2 {
-            font-size: 2.25em;
-            font-weight: bold;
-        }
-    </style>
+    <div th:replace="fragments/headMetaLinksScripts :: headContent"  th:remove="tag"></div>
+    <title th:text="${pageTitle}">Spring Boot</title>
 </head>
 <body>
+<div th:replace="fragments/navBar :: navBarMenu">...</div>
+
 <div class="jumbotron text-center" style="margin-bottom:0">
     <h1>Herkansing: Java Spring Boot Project</h1>
     <p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just
         run".</p>
     <h1 th:text="${appName}">app</h1>
 </div>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <a class="navbar-brand" href="/">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/qStart">Quickstart</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#PathVariables">Path Variables</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-        </ul>
-    </div>
-</nav>
 
 <div class="container">
     <h2>Intro</h2>
@@ -197,7 +153,7 @@ public String venue(@PathVariable(required = false) String venueName, Model mode
     <img class="centerImg col-md-4" src="/images/DefaultCase.png"
          alt="Spring Optional Path Variables for a default case">
     <div>
-        <p class="display-4">Thymeleaf iterators</p>
+        <p class="display-4" id="ThymeleafIterator">Thymeleaf iterators</p>
         <div class="row">
             <div class="col-md-3">
                 <h3>Overview</h3>
@@ -324,80 +280,225 @@ public String home(Model model) {
     new Venue(4, "t'Ile Maline", false, true, "https://www.tilemalines.be/")
 };
             </pre>
-            <p>We will use this array of Venue objects here in the home page below:</p>
-            <div  id="venueList2" class="jumbotron row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6">
-                    <table class="table table-bordered table-striped text-center">
-                        <caption>List of venues from the venue array</caption>
-                        <tr>
-                            <th>ID</th>
-                            <th>Venue Name</th>
-                        </tr>
 
-                        <tr th:each="ven : ${venArr}">
-                            <td th:text="${venStat.count}">
-                            </td>
-                            <td>
-                                <a th:text="${ven.getVenueName()}" th:href="${'/venue/id/'+(ven.getId()+1)}"
-                                   href="venue.html"
-                                   class="btn btn-secondary buttonLook" style="width: 100%"></a>
-                            </td>
-                        </tr>
+        </div>
+    </div>
 
-                    </table>
+    <div class="container">
+        <p id="addPrevNext">Below I have collected some more examples of Spring Boot</p>
+        <h3>Exercise: add prev and next buttons in venue page</h3>
+        <p>In the <b>venue</b> page add buttons so that we can go to the previous and the next venue without having to
+            go back to the home page.</p>
+        <p>To handle this we create a new method in the <code>HomeController</code> as follows:</p>
+        <pre>
+@GetMapping({"/venue/id/{venID}"})
+public String venueId(Model model, @PathVariable int venID) {
+    GetAppMsg (model);
+    model.addAttribute("venArr", venueArray);
+    model.addAttribute("venID", venID);
+    model.addAttribute("venue", venueArray[(venID-1)]);
+    model.addAttribute("pageTitle", "Venue: "+venueArray[(venID-1)].getVenueName());
+    model.addAttribute("idOfPrevVenue", venID > 1 ? venID-1 : venueArray.length);
+    model.addAttribute("idOfNextVenue", venID < venueArray.length ? venID+1 : 1);
+    return "venue";
+}
+                        </pre>
+        <p>To do this task first we need to display the objects shown above like the one below in a way
+            that when you click on each venue name, you are redirected to the venue page
+            (venue/id/{venueID}), where you can see the clicked venue's details, and also Previous and
+            Next buttons to surf among other venues.</p>
+        <div id="venueList2" class="jumbotron row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <table class="table table-bordered table-striped text-center">
+                    <caption>List of venues from the venue array</caption>
+                    <tr>
+                        <th>ID</th>
+                        <th>Venue Name</th>
+                    </tr>
+
+                    <tr th:each="ven : ${venArr}">
+                        <td th:text="${venStat.count}">
+                        </td>
+                        <td>
+                            <a th:text="${ven.getVenueName()}" th:href="${'/venue/id/'+(ven.getId()+1)}"
+                               href="venue.html"
+                               class="btn btn-secondary buttonLook" style="width: 100%"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                        <code>venue.html</code>: in the venue page we add the code for venue details and the code to
+                        display the backward and forward buttons as follows:
+                    </a>
                 </div>
-                <div class="col-md-3"></div>
+                <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                    <div class="card-body">
+                        <p>And in the venue page we add the code for venue details and the code to display the backward
+                            and forward buttons as follows:</p>
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;div th:replace=&quot;fragments/headMetaLinksScripts :: headContent&quot;&gt;&lt;/div&gt;
+    &lt;title th:text=&quot;${pageTitle}&quot;&gt;Venue&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+
+    &lt;div th:replace=&quot;fragments/navBar :: navBarMenu&quot;&gt;...&lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-3&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div id=&quot;myDIV&quot;&gt;
+                &lt;h1 th:text=&quot;${appName}&quot;&gt;app&lt;/h1&gt;
+                &lt;h3 th:text=&quot;${wMsg}&quot;&gt;Welcome!&lt;/h3&gt;
+                &lt;p class=&quot;text-secondary display-4 font-weight-bold&quot;&gt;
+
+                    &lt;span th:if=&quot;${venue}&quot; th:text=&quot;|${venue.getVenueName()}|&quot;&gt;Venue!&lt;/span&gt;
+                    &lt;span th:unless=&quot;${venue}&quot; th:text=&quot;|${vName}|&quot;&gt;Venue!&lt;/span&gt;
+                    &lt;i class=&quot;fas fa-glass-cheers&quot;&gt;&lt;/i&gt;
+
+                &lt;/p&gt;
+                &lt;div th:if=&quot;${venue}&quot; class=&quot;row&quot;&gt;
+                    &lt;div class=&quot;col ml-5&quot;&gt;
+                        &lt;a th:href=&quot;'/venue/id/'+${idOfPrevVenue}&quot;
+                           href=&quot;venue.html&quot;
+                           class=&quot;btn buttonLook&quot; style=&quot;font-size: 1.5em&quot;&gt;&lt;i class=&quot;fas fa-step-backward&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;col&quot;&gt;&lt;/div&gt;
+                    &lt;div class=&quot;col mr-5&quot;&gt;
+                        &lt;a th:href=&quot;'/venue/id/'+${idOfNextVenue}&quot;
+                           href=&quot;venue.html&quot;
+                           class=&quot;btn buttonLook&quot; style=&quot;font-size: 1.5em&quot;&gt;&lt;i class=&quot;fas fa-step-forward&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;p th:if=&quot;${venue}&quot; class=&quot;mt-3 mb-3&quot;&gt;
+                    &lt;a href=&quot;/#venueList2&quot; class=&quot;btn btn-success&quot;&gt;
+                        &lt;i class=&quot;fa fa-arrow-circle-o-left&quot;&gt;&lt;/i&gt; &amp;nbsp;Back to the venue list
+                    &lt;/a&gt;
+                &lt;/p&gt;
+                &lt;p th:unless=&quot;${venue}&quot;  class=&quot;mt-3 mb-3&quot;&gt;
+                    &lt;a href=&quot;/#venueList&quot; class=&quot;btn btn-success&quot;&gt;
+                        &lt;i class=&quot;fa fa-arrow-circle-o-left&quot;&gt;&lt;/i&gt; &amp;nbsp;Back to the venue list
+                    &lt;/a&gt;
+                &lt;/p&gt;
+                &lt;p style=&quot;height: 5px&quot;&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;col-md-3&quot;&gt;
+            &lt;div th:if=&quot;${venue}&quot;&gt;
+                &lt;h2 th:text=&quot;${venue.venueName}&quot;&gt;venue&lt;/h2&gt;
+                &lt;div class=&quot;venueinfo&quot;&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;max number of people:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot;
+                             th:text=&quot;${venue.infoAvailableMaxNumberOfPersons} ? ${venue.maxNumberOfPersons}: 'unknown'&quot;&gt;
+                            77
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;are own drinks allowed:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot; th:text=&quot;${venue.ownDrinkAllowed}&quot;&gt;yes&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;is food possible:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot; th:text=&quot;${venue.isFoodPossible()}&quot;&gt;yes&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;more info:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot;&gt;&lt;a th:text=&quot;${venue.linkMoreInfo}&quot;
+                                                      th:href=&quot;${venue.linkMoreInfo}&quot;
+                                                      class=&quot;linkLook&quot;
+                                                      target=&quot;_blank&quot;&gt;more_info_link&lt;/a&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;footer&gt;
+    &lt;div th:replace=&quot;fragments/footer :: footer&quot;&gt;&amp;copy; 2016 The Static Templates&lt;/div&gt;
+&lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <h5 class="text-center">
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        <a href="/venue/id/2">http://localhost:8080/venue/id/2</a>
+                    </h5>
+                    <img class="centerImg" src="/images/PrevNextButtonView4Venue.png"
+                         alt="Venue details and back and forward buttons">
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <h2>Exception Handling in Spring MVC</h2>
+            <p>If no view-resolver mapping for /error can be found, Spring Boot defines its own fall-back error page -
+                the so-called "Whitelabel Error Page" (a minimal page with just the HTTP status information and any
+                error details, such as the message from an uncaught exception). If this is not ideal, you can define a
+                customized error page. </p>
+            <h3>Exercise: add an <b class="text-danger text-bold">error</b> page</h3>
+            <p>A common requirement in any web application are customized error pages. For instance, suppose a user
+                enters an invalid URL in his browser and is shown a not so user-friendly stack trace, the so-called
+                "Whitelabel Error Page".</p>
+            <p>To avoid this, you can simply add a template named <code>error.html</code>. This page will be displayed by
+                Spring in case of an exception.</p>
+            <div class="card">
+                <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                        Collapsible Group Item #2
+                    </a>
+                </div>
+                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                        Collapsible Group Item #3
+                    </a>
+                </div>
+                <div id="collapseThree" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </div>
+                </div>
             </div>
         </div>
-        <p>To set up an example we create an array of guests for a party:</p>
-        <pre>
-    private PartyGuest[] pGuests = {
-        new PartyGuest(1, "Ali", "Male"),
-        new PartyGuest(2, "Anja", "Female"),
-        new PartyGuest(3, "Kian", "Male"),
-        new PartyGuest(4, "Tara", "Female")
-        };
-    </pre>
-        <p>Add this array to the model in the guest <code>RequestHandler</code> method</p>
-        <pre>
-    @GetMapping({"/guest", "/guest/{pgID}"})
-    public String guest(@PathVariable(required = false) int pgID, Model model) {
-        model.addAttribute("appName", applicationName);
-        model.addAttribute("wMsg", welcomeMSG);
-        model.addAttribute("pGuests", pGuests);
-        model.addAttribute("pGuest", pgID);
-        return "guest";
-    }
-        </pre>
-        <p>Now, while iterating over this array, you can apply the conditions like the code below in your
-            guest.html file: </p>
-        <pre>
-           &lt;table class=&quot;table table-dark&quot;&gt;
-            &lt;caption&gt;List of Female-Guests&lt;/caption&gt;
-            &lt;thead&gt;
-            &lt;tr&gt;
-                &lt;th&gt;ID&lt;/th&gt;
-                &lt;th&gt;Name&lt;/th&gt;
-                &lt;th&gt;Gender&lt;/th&gt;
-            &lt;/tr&gt;
-            &lt;/thead&gt;
-            &lt;tbody&gt;
-            &lt;tr th:each=&quot;pg: ${pGuests}&quot; th:if=&quot;${pg.gender eq 'Female'}&quot; &gt;
-                &lt;td th:text=&quot;${pg.getId()}&quot;&gt;0&lt;/td&gt;
-                &lt;td th:text=&quot;${pg.getName()}&quot;&gt;Guest-Name&lt;/td&gt;
-                &lt;td th:text=&quot;${pg.getGender()}&quot;&gt;Guest-Gender&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;/tbody&gt;
-        &lt;/table&gt;
-        </pre>
+    </div>
+
+
+    <div>
+        <h2></h2>
+
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+<footer>
+    <div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+</footer>
 </body>
 </html>

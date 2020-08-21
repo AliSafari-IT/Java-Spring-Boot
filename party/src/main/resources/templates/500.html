@@ -1,0 +1,26 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/headMetaLinksScripts :: headContent" th:remove="tag"></div>
+    <title>HTTP 404</title>
+    <link rel="stylesheet" href="/css/errorStyle.scss">
+</head>
+<body>
+<div class="container">
+    <div class="display-1 text-center m-5">Error 500</div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <img class="centerImg" src="/images/500-Error.png" alt="Error 500">
+        </div>
+        <div class="col-md-4">
+            <div class="h3 mt-5">Looks like you found a bug!</div>
+            <p> It appeared the server crashed! Apologies.
+            <p>Let's go <a class="btn btn-info green" href="/">home</a>!</p>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+</body>
+</html>

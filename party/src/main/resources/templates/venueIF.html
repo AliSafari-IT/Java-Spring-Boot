@@ -20,6 +20,17 @@
     <p><a href="/#TConditional" class="text-light text-right">Back to the Thymeleaf Conditional Evaluation</a></p>
 </div>
 
+<div>
+    <a th:href="'/venue/'+${idOfPrevVenue}"
+       href="venue.html"
+       class="buttonLook smallButton">&lt;</a>
+</div>
+<div class="nextButtonDiv">
+    <a th:href="'/venue/'+${idOfNextVenue}"
+       href="venue.html"
+       class="buttonLook smallButton">&gt;</a>
+</div>
+
 <footer>
     <a href="/" class="text-light">Go to home page</a>
 </footer>

@@ -38,6 +38,7 @@ public class HomeController {
         GetAppMsg (model);
         model.addAttribute("vNames", venueNames);
         model.addAttribute("venArr", venueArray);
+        model.addAttribute("pageTitle", "Herkansing");
         return "home";
     }
 
@@ -69,6 +70,7 @@ public class HomeController {
         GetAppMsg (model);
         model.addAttribute("vNames", venueNames);
         model.addAttribute("vName", (venueName != null) ? venueName : "Boesj");
+        model.addAttribute("pageTitle", "Venue: "+venueName);
         return "venue";
     }
 
@@ -78,6 +80,9 @@ public class HomeController {
         model.addAttribute("venArr", venueArray);
         model.addAttribute("venID", venID);
         model.addAttribute("venue", venueArray[(venID-1)]);
+        model.addAttribute("pageTitle", "Venue: "+venueArray[(venID-1)].getVenueName());
+        model.addAttribute("idOfPrevVenue", venID > 1 ? venID-1 : venueArray.length);
+        model.addAttribute("idOfNextVenue", venID < venueArray.length ? venID+1 : 1);
         return "venue";
     }
 
@@ -85,6 +90,7 @@ public class HomeController {
     public String venueIF(@PathVariable(required = false) String venueName, Model model) {
         GetAppMsg (model);
         model.addAttribute("vName", venueName);
+        model.addAttribute("pageTitle", "Venue: "+venueName);
         return "venueIF";
     }
 
