@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="fragments/headMetaLinksScripts :: headContent"  th:remove="tag"></div>
+    <div th:replace="fragments/headMetaLinksScripts :: headContent" th:remove="tag"></div>
     <title th:text="${pageTitle}">Spring Boot</title>
 </head>
 <body>
@@ -453,37 +453,129 @@ public String venueId(Model model, @PathVariable int venID) {
                 the so-called "Whitelabel Error Page" (a minimal page with just the HTTP status information and any
                 error details, such as the message from an uncaught exception). If this is not ideal, you can define a
                 customized error page. </p>
-            <h3>Exercise: add an <b class="text-danger text-bold">error</b> page</h3>
-            <p>A common requirement in any web application are customized error pages. For instance, suppose a user
-                enters an invalid URL in his browser and is shown a not so user-friendly stack trace, the so-called
-                "Whitelabel Error Page".</p>
-            <p>To avoid this, you can simply add a template named <code>error.html</code>. This page will be displayed by
-                Spring in case of an exception.</p>
             <div class="card">
                 <div class="card-header">
                     <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
-                        Collapsible Group Item #2
+                        Exercise: add an <b class="text-danger text-bold">error</b> page
                     </a>
                 </div>
                 <div id="collapseTwo" class="collapse" data-parent="#accordion">
                     <div class="card-body">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.
+                        <p>A common requirement in any web application are customized error pages. For instance, suppose
+                            a user
+                            enters an invalid URL in his browser and is shown a not so user-friendly stack trace, the
+                            so-called
+                            "Whitelabel Error Page".</p>
+                        <p>To avoid this, you can simply add a template named <code>error.html</code>. This page will be
+                            displayed by
+                            Spring in case of an exception:</p>
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Page Not Found&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;There's no page here!&lt;/h1&gt;
+&lt;p&gt;
+    We're sorry, the page you are looking for does not exist!
+    Go back to &lt;a href=&quot;/&quot;&gt;home page&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
-                        Collapsible Group Item #3
+                        Exercise: add <b class="text-danger text-bold">error</b> pages for main types of error
                     </a>
                 </div>
                 <div id="collapseThree" class="collapse" data-parent="#accordion">
                     <div class="card-body">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.
+                        <p>Spring Boot provides default mapping for /error to which all exception or error responses are
+                            forwarded. That's why any error (like a 404 error) or Exception thrown from the Controller
+                            will
+                            map to the /error page and our custom error page will be rendered.</p>
+                        To show each error type in its own error page we define the requests in the in an Error
+                        Controller shown in <code>MyErrorController.java</code> like:
+                        <pre>
+package thomasmore.be.party;
+
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+public class MyErrorController implements ErrorController {
+
+    @Override
+    public String getErrorPath() {
+        return "/error";
+    }
+
+    @RequestMapping("/error")
+    public String handleError(HttpServletRequest request) {
+        // get error status
+        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        // Todo: log error details
+        if (status != null) {
+            int statusCode = Integer.parseInt(status.toString());
+
+            // display specific error page
+            if (statusCode == HttpStatus.NOT_FOUND.value()) {
+                return "404";
+            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                return "500";
+            } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
+                return "403";
+            }
+        }
+        // display generic error
+        return "error";
+    }
+}
+                        </pre>
+                        And for example <code><b>404.html</b></code> can be like this:
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+
+&lt;head&gt;
+    &lt;div th:replace=&quot;fragments/headMetaLinksScripts :: headContent&quot; th:remove=&quot;tag&quot;&gt;&lt;/div&gt;
+    &lt;title&gt;HTTP 404&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/errorStyle.scss&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;display-1 text-center m-5&quot;&gt;Error 404&lt;/div&gt;
+    &lt;div class=&quot;h1&quot;&gt;Oh no! You are lost!&lt;/div&gt;
+    &lt;p&gt; The page you are looking for does not exist. That can happen when you follow a link to something that has since
+        been deleted. Or the link was incorrect to begin with. But you can click the button below to go back to the
+        homepage.
+    &lt;p&gt;&lt;a class=&quot;btn btn-info green&quot; href=&quot;/&quot;&gt;home page&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <p class="text-center"><i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                                    <a href="/qStartv">http://localhost:8080/kklkuol</a></p>
+                                <img src="/images/err404_Output.png" alt="Error 4040" class="centerImg">
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
                     </div>
                 </div>
             </div>

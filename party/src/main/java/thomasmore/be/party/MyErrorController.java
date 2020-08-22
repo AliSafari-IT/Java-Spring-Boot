@@ -20,9 +20,7 @@ public class MyErrorController implements ErrorController {
     public String handleError(HttpServletRequest request) {
         // get error status
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
-        // TODO: log error details here
-
+        // Todo: log error details
         if (status != null) {
             int statusCode = Integer.parseInt(status.toString());
 
@@ -35,10 +33,7 @@ public class MyErrorController implements ErrorController {
                 return "403";
             }
         }
-
         // display generic error
         return "error";
     }
-
-
 }
