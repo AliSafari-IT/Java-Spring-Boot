@@ -1,0 +1,596 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/headMetaLinksScripts :: headContent" th:remove="tag"></div>
+    <title th:text="${pageTitle}">Spring Boot</title>
+</head>
+<body>
+<div th:replace="fragments/navBar :: navBarMenu">...</div>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <h1>Herkansing: Java Spring Boot Project</h1>
+    <p>Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just
+        run".</p>
+    <h1 th:text="${appName}">app</h1>
+</div>
+
+<div class="container">
+    <h2>Intro</h2>
+    Spring Boot is an open source Java-based framework used to create a micro Service. It is developed by Pivotal Team
+    and is used to build stand-alone and production ready spring applications. This webapp will give you an
+    introduction to Spring Boot and familiarizes you with its basic concepts.
+    <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a href="/qStart">Spring Quickstart Guide</a></p>
+    <div>
+        <h3 id="variableInPage">Exercise: use variables in the pages</h3>
+        <ul>
+            <li>Create a view called <em>blabla</em></li>
+            <li>Display the same variable (<code>applicationName</code>)</li>
+            <li>Add another field in the HomeController class and use the field</li>
+            <li>Add a css file in folder resources/static/css and style the page</li>
+            <li>Add a link to the home page</li>
+        </ul>
+        <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a id="blablaExercise" href="/blabla">See result</a>
+        </p>
+    </div>
+    <h2>MVC = Model–View–Controller</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <dl>
+                <dt>Model</dt>
+                <dd>The central component of the pattern. It is the application's dynamic data structure, independent of
+                    the
+                    user interface. It directly manages the data, logic and rules of the application.
+                </dd>
+                <dt>View</dt>
+                <dd>Any representation of information such as a chart, diagram or table. Multiple views of the same
+                    information
+                    are possible, such as a bar chart for management and a tabular view for accountants.
+                </dd>
+                <dt>Controller</dt>
+                <dd>Accepts input and converts it to commands for the model or view.</dd>
+            </dl>
+            <p>In addition to dividing the application into these components, the model–view–controller design defines
+                the
+                interactions between them.
+            </p>
+            <ul>
+                <li>The model is responsible for managing the data of the application. It receives user input from the
+                    controller.
+                </li>
+                <li>The view means presentation of the model in a particular format.</li>
+                <li>The controller responds to the user input and performs interactions on the data model objects. The
+                    controller receives the input, optionally validates it and then passes the input to the model.
+                </li>
+            </ul>
+            <p>As with other software patterns, MVC expresses the "core of the solution" to a problem while allowing it
+                to be
+                adapted for each system. Particular MVC designs can vary significantly from the traditional description
+                here.
+            </p>
+        </div>
+        <div class="col-md-4">
+            <table>
+                <caption style="caption-side:bottom">MVC is a pattern that is commonly used in software engineering.
+                </caption>
+                <tr>
+                    <td>
+                        <img class="centerImg" src="https://upload.wikimedia.org/wikipedia/commons/a/a0/MVC-Process.svg"
+                             alt="Diagram of interactions within the MVC pattern">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <h2 id="PathVariables">Spring Path Variables with Thymeleaf</h2>
+    <p>We use path variables when we want to pass a value as part of the URL. In a Spring controller, we access these
+        values using the <a
+                href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/PathVariable.html"><em>@PathVariable</em></a>
+        annotation. A PathVariable can be used to pass a variable from one page to another.</p>
+    <ul>
+        <li>Add a new page Venue with a <em>Requesthandler</em> <code>venue()</code> in the <em>HomeController</em> with
+            the Model parameter.
+        </li>
+        <li>Add a new parameter String <code>venueName</code> to this method</li>
+        <li>Mark this parameter as a <em>PathVariable</em></li>
+    </ul>
+    <p>The <em>Requesthandler</em> <code>venue()</code> is as follows:</p>
+    <pre>
+@GetMapping("/venue/{venueName}")
+public String venue(@PathVariable String venueName, Model model) {
+    model.addAttribute("appName", applicationName);
+    model.addAttribute("wMsg", welcomeMSG);
+    model.addAttribute("vName",venueName);
+    return "venue";
+}
+    </pre>
+    <p>Now we can use these values in the template venue.html, for example:</p>
+    <div class="bg-warning">
+    <pre>
+&lt;p class=&quot;text-secondary display-4 m-5 font-weight-bold&quot;&gt;
+&lt;span th:text=&quot;${venueName}&quot;&gt;Venue!&lt;/span&gt; &lt;i class=&quot;fas fa-glass-cheers&quot;&gt;&lt;/i&gt;
+&lt;/p&gt;
+</pre>
+    </div>
+    <p>Ok, let's test it in the browser: </p>
+    <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a href="/venue/De Club">http://localhost:8080/venue/De%20Club</a>
+    </p>
+    <h2>Spring Optional Path Variables</h2>
+    By default, Spring will try to bind all parameters annotated with <em>@PathVariable</em> in a handler method with
+    the corresponding variables in the URI template. If Spring fails, it'll not deliver our request to that handler
+    method.
+    <h3>But why setting Optional Path Variables?</h3>
+    <p>Referring to our example above, if you send a Request to the web application for a venue without parameter, you
+        will get an error page, meaning if you try <a href="/venue/">http://localhost:8080/venue</a>, you will get this:
+    </p>
+    <img class="centerImg col-md-4" src="/images/WhiteErrPage.png" alt="Whitelabel Error Page">
+    <p>So, if we don’t want an error page in this case, and instead we want to display a default venue, we have to
+        specify 2 possible urls in 1 RequestHandler by indicating that the PathVariable is optional. The advantage of
+        this way is that this way will save a few dozen duplicate lines of code</p>
+    <p>So for our example instead of adding a method for a default situation:</p>
+    <pre>
+@GetMapping({"/venue"})
+public String venue(Model model) {
+    model.addAttribute("appName", applicationName);
+    model.addAttribute("wMsg", welcomeMSG);
+    model.addAttribute("vName","Boesj");
+    return "venue";
+    }
+    </pre>
+    <p>we just add optional <em>PathVariables</em> to our current venue method as follows:</p>
+    <pre>
+@GetMapping({"/venue", "/venue/{venueName}"})
+public String venue(@PathVariable(required = false) String venueName, Model model) {
+    model.addAttribute("appName", applicationName);
+    model.addAttribute("wMsg", welcomeMSG);
+    model.addAttribute("vName", (venueName != null) ? venueName : "Boesj");
+    return "venue";
+}
+    </pre>
+    <p>Now, if you try again this link (<a href="/venue/">http://localhost:8080/venue</a>) you will get a default output
+        not an error page:</p>
+    <img class="centerImg col-md-4" src="/images/DefaultCase.png"
+         alt="Spring Optional Path Variables for a default case">
+    <div>
+        <p class="display-4" id="ThymeleafIterator">Thymeleaf iterators</p>
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Overview</h3>
+                <p>In this section, we'll take a look at how we can perform iteration with Thymeleaf, along with
+                    some other features provided by the library.</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Example Set-up</h3>
+                <ul>
+                    <li>Add an array of Strings that contains the names of the venues in
+                        <code>HomeController.java</code>
+                        <pre>
+<code>private String[] venueNames = {"De Club", "De Loods", "De Hanger", "Zapoi", "Kuub", "Cuba Libre"};</code>
+                        </pre>
+                    </li>
+                    <li>Add this array to the model in the home <code>RequestHandler</code> method:
+                        <pre>
+@GetMapping("/")
+public String home(Model model) {
+    model.addAttribute("appName", applicationName);
+    model.addAttribute("vNames", venueNames);
+    return "home";
+}
+                    </pre>
+                    </li>
+                    <li>Iterate over this array to display the links for the different venues in the view page
+                        home.html: <br>
+                        <pre>
+&lt;ul&gt;
+    &lt;li th:each=&quot;venueName:${vNames}&quot;&gt;
+        &lt;a th:text=&quot;${venueName}&quot;
+           th:href=&quot;'venue/'+${venueName}&quot;
+           href=&quot;venue.html&quot;
+           class=&quot;btn btn-outline-primary btn-block&quot;&gt;the venue name&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+                        </pre>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h3 id="venueList" class="text-center">Iteration result</h3>
+                <div class="jumbotron" style="margin-bottom:0">
+                    <h3 class="text-center">Venue List</h3>
+                    <ul>
+                        <li th:each="venueName:${vNames}">
+                            <a th:text="${venueName}"
+                               th:href="'venue/'+${venueName}"
+                               href="venue.html"
+                               class="btn btn-outline-primary btn-block" style="flex-grow: 2;">the venue name</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="TConditional" class="display-4">
+            Thymeleaf Conditional Evaluation
+        </div>
+
+        <div class="h3">Simple Conditionals: "if" and "unless"
+        </div>
+        <p>Sometimes you will need a fragment of your template only to appear in the result if a certain condition is
+            met.</p>
+        <p>Make a copy of the method venue() and name it venueIF(). Modify it like this:</p>
+        <pre>
+    @GetMapping({"/venueIF", "/venueIF/{venueName}"})
+    public String venueIF(@PathVariable(required = false) String venueName, Model model) {
+        model.addAttribute("appName", applicationName);
+        model.addAttribute("wMsg", welcomeMSG);
+        model.addAttribute("vName", venueName);
+        return "venueIF";
+    }
+        </pre>
+        <p>Now create a new View called venueIF.html and try the code below:</p>
+        <pre>
+&lt;div id=&quot;myDIV&quot;&gt;
+&lt;h1 th:if=&quot;${vName}&quot;&gt;&lt;p th:text=&quot;${vName}&quot;&gt;Venue&lt;/p&gt;&lt;/h1&gt;
+&lt;p th:unless=&quot;${vName}&quot;&gt; No Venue Was Chosen! &lt;/p&gt;
+&lt;h3 th:text=&quot;${wMsg}&quot;&gt;Welcome!&lt;/h3&gt;
+&lt;p class=&quot;text-secondary display-4 m-5 font-weight-bold&quot;&gt;
+    &lt;span th:text=&quot;|${vName}|&quot;&gt;Venue!&lt;/span&gt; &lt;i class=&quot;fas fa-glass-cheers&quot;&gt;&lt;/i&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/#venueList&quot; class=&quot;text-light text-right&quot;&gt;Back to the venue list&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+        </pre>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <h5 class="text-center"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a href="/venueIF">http://localhost:8080/venueIF</a>
+                </h5>
+                <img class="centerImg" src="/images/venueIF.png"
+                     alt="Thymeleaf Conditional Evaluation (If-Unless without venue name)">
+            </div>
+            <div class="col-md-5">
+                <h5 class="text-center"><i class="fa fa-hand-o-right" aria-hidden="true"></i> <a
+                        href="/venueIF/De%20Club">http://localhost:8080/venueIF/De%20Club</a></h5>
+                <img class="centerImg" src="/images/venueIF_vName.png"
+                     alt="Thymeleaf Conditional Evaluation (If-Unless with venue name)">
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div>
+            <h2>Use Objects in the Model</h2>
+            <p>To set up an example we create a class in the model package (be.thomasmore.party.model) for venue called
+                Venue.java</p>
+            <p>Add some interesting fields to the Venue like:</p>
+            <pre>
+    private int id;
+    private String venueName;
+    private boolean infoAvailableMaxNumberOfPersons;
+    private int maxNumberOfPersons;
+    private boolean areOwnDrinksAllowed;
+    private boolean isFoodPossible;
+    private String linkMoreInfo;
+            </pre>
+            <p>Then generate getter and setter for those fields.</p>
+            <p>In the <em>HomeController</em> create an array of Venue objects:</p>
+            <pre>
+    private Venue[] venueArray = {
+    new Venue(0, "De Club", true, 150, false, true, "https://transitm.mechelen.be/infofiche_declubpdf"),
+    new Venue(1, "De Loods", true, 1000, false, true, "https://transitm.mechelen.be/infofiche-deloodspdf"),
+    new Venue(2, "Zapoi", true, false, "http://www.kafeezapoi.be/"),
+    new Venue(3, "De Kuub", false, true, "http://www.dekuub.be/"),
+    new Venue(4, "t'Ile Maline", false, true, "https://www.tilemalines.be/")
+};
+            </pre>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <p id="addPrevNext">Below I have collected some more examples of Spring Boot</p>
+        <h3>Exercise: add prev and next buttons in venue page</h3>
+        <p>In the <b>venue</b> page add buttons so that we can go to the previous and the next venue without having to
+            go back to the home page.</p>
+        <p>To handle this we create a new method in the <code>HomeController</code> as follows:</p>
+        <pre>
+@GetMapping({"/venue/id/{venID}"})
+public String venueId(Model model, @PathVariable int venID) {
+    GetAppMsg (model);
+    model.addAttribute("venArr", venueArray);
+    model.addAttribute("venID", venID);
+    model.addAttribute("venue", venueArray[(venID-1)]);
+    model.addAttribute("pageTitle", "Venue: "+venueArray[(venID-1)].getVenueName());
+    model.addAttribute("idOfPrevVenue", venID > 1 ? venID-1 : venueArray.length);
+    model.addAttribute("idOfNextVenue", venID < venueArray.length ? venID+1 : 1);
+    return "venue";
+}
+                        </pre>
+        <p>To do this task first we need to display the objects shown above like the one below in a way
+            that when you click on each venue name, you are redirected to the venue page
+            (venue/id/{venueID}), where you can see the clicked venue's details, and also Previous and
+            Next buttons to surf among other venues.</p>
+        <div id="venueList2" class="jumbotron row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <table class="table table-bordered table-striped text-center">
+                    <caption>List of venues from the venue array</caption>
+                    <tr>
+                        <th>ID</th>
+                        <th>Venue Name</th>
+                    </tr>
+
+                    <tr th:each="ven : ${venArr}">
+                        <td th:text="${venStat.count}">
+                        </td>
+                        <td>
+                            <a th:text="${ven.getVenueName()}" th:href="${'/venue/id/'+(ven.getId()+1)}"
+                               href="venue.html"
+                               class="btn btn-secondary buttonLook" style="width: 100%"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                        <code>venue.html</code>: in the venue page we add the code for venue details and the code to
+                        display the backward and forward buttons as follows:
+                    </a>
+                </div>
+                <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                    <div class="card-body">
+                        <p>And in the venue page we add the code for venue details and the code to display the backward
+                            and forward buttons as follows:</p>
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;div th:replace=&quot;fragments/headMetaLinksScripts :: headContent&quot;&gt;&lt;/div&gt;
+    &lt;title th:text=&quot;${pageTitle}&quot;&gt;Venue&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+
+    &lt;div th:replace=&quot;fragments/navBar :: navBarMenu&quot;&gt;...&lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-3&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div id=&quot;myDIV&quot;&gt;
+                &lt;h1 th:text=&quot;${appName}&quot;&gt;app&lt;/h1&gt;
+                &lt;h3 th:text=&quot;${wMsg}&quot;&gt;Welcome!&lt;/h3&gt;
+                &lt;p class=&quot;text-secondary display-4 font-weight-bold&quot;&gt;
+
+                    &lt;span th:if=&quot;${venue}&quot; th:text=&quot;|${venue.getVenueName()}|&quot;&gt;Venue!&lt;/span&gt;
+                    &lt;span th:unless=&quot;${venue}&quot; th:text=&quot;|${vName}|&quot;&gt;Venue!&lt;/span&gt;
+                    &lt;i class=&quot;fas fa-glass-cheers&quot;&gt;&lt;/i&gt;
+
+                &lt;/p&gt;
+                &lt;div th:if=&quot;${venue}&quot; class=&quot;row&quot;&gt;
+                    &lt;div class=&quot;col ml-5&quot;&gt;
+                        &lt;a th:href=&quot;'/venue/id/'+${idOfPrevVenue}&quot;
+                           href=&quot;venue.html&quot;
+                           class=&quot;btn buttonLook&quot; style=&quot;font-size: 1.5em&quot;&gt;&lt;i class=&quot;fas fa-step-backward&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;col&quot;&gt;&lt;/div&gt;
+                    &lt;div class=&quot;col mr-5&quot;&gt;
+                        &lt;a th:href=&quot;'/venue/id/'+${idOfNextVenue}&quot;
+                           href=&quot;venue.html&quot;
+                           class=&quot;btn buttonLook&quot; style=&quot;font-size: 1.5em&quot;&gt;&lt;i class=&quot;fas fa-step-forward&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;p th:if=&quot;${venue}&quot; class=&quot;mt-3 mb-3&quot;&gt;
+                    &lt;a href=&quot;/#venueList2&quot; class=&quot;btn btn-success&quot;&gt;
+                        &lt;i class=&quot;fa fa-arrow-circle-o-left&quot;&gt;&lt;/i&gt; &amp;nbsp;Back to the venue list
+                    &lt;/a&gt;
+                &lt;/p&gt;
+                &lt;p th:unless=&quot;${venue}&quot;  class=&quot;mt-3 mb-3&quot;&gt;
+                    &lt;a href=&quot;/#venueList&quot; class=&quot;btn btn-success&quot;&gt;
+                        &lt;i class=&quot;fa fa-arrow-circle-o-left&quot;&gt;&lt;/i&gt; &amp;nbsp;Back to the venue list
+                    &lt;/a&gt;
+                &lt;/p&gt;
+                &lt;p style=&quot;height: 5px&quot;&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;col-md-3&quot;&gt;
+            &lt;div th:if=&quot;${venue}&quot;&gt;
+                &lt;h2 th:text=&quot;${venue.venueName}&quot;&gt;venue&lt;/h2&gt;
+                &lt;div class=&quot;venueinfo&quot;&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;max number of people:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot;
+                             th:text=&quot;${venue.infoAvailableMaxNumberOfPersons} ? ${venue.maxNumberOfPersons}: 'unknown'&quot;&gt;
+                            77
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;are own drinks allowed:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot; th:text=&quot;${venue.ownDrinkAllowed}&quot;&gt;yes&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;is food possible:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot; th:text=&quot;${venue.isFoodPossible()}&quot;&gt;yes&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;infoLine&quot;&gt;
+                        &lt;div class=&quot;infoLineName&quot;&gt;more info:&lt;/div&gt;
+                        &lt;div class=&quot;infoLineValue&quot;&gt;&lt;a th:text=&quot;${venue.linkMoreInfo}&quot;
+                                                      th:href=&quot;${venue.linkMoreInfo}&quot;
+                                                      class=&quot;linkLook&quot;
+                                                      target=&quot;_blank&quot;&gt;more_info_link&lt;/a&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;footer&gt;
+    &lt;div th:replace=&quot;fragments/footer :: footer&quot;&gt;&amp;copy; 2016 The Static Templates&lt;/div&gt;
+&lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <h5 class="text-center">
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        <a href="/venue/id/2">http://localhost:8080/venue/id/2</a>
+                    </h5>
+                    <img class="centerImg" src="/images/PrevNextButtonView4Venue.png"
+                         alt="Venue details and back and forward buttons">
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <h2>Exception Handling in Spring MVC</h2>
+            <p>If no view-resolver mapping for /error can be found, Spring Boot defines its own fall-back error page -
+                the so-called "Whitelabel Error Page" (a minimal page with just the HTTP status information and any
+                error details, such as the message from an uncaught exception). If this is not ideal, you can define a
+                customized error page. </p>
+            <div class="card">
+                <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                        Exercise: add an <b class="text-danger text-bold">error</b> page
+                    </a>
+                </div>
+                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                        <p>A common requirement in any web application are customized error pages. For instance, suppose
+                            a user
+                            enters an invalid URL in his browser and is shown a not so user-friendly stack trace, the
+                            so-called
+                            "Whitelabel Error Page".</p>
+                        <p>To avoid this, you can simply add a template named <code>error.html</code>. This page will be
+                            displayed by
+                            Spring in case of an exception:</p>
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Page Not Found&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;There's no page here!&lt;/h1&gt;
+&lt;p&gt;
+    We're sorry, the page you are looking for does not exist!
+    Go back to &lt;a href=&quot;/&quot;&gt;home page&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                        Exercise: add <b class="text-danger text-bold">error</b> pages for main types of error
+                    </a>
+                </div>
+                <div id="collapseThree" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                        <p>Spring Boot provides default mapping for /error to which all exception or error responses are
+                            forwarded. That's why any error (like a 404 error) or Exception thrown from the Controller
+                            will
+                            map to the /error page and our custom error page will be rendered.</p>
+                        To show each error type in its own error page we define the requests in the in an Error
+                        Controller shown in <code>MyErrorController.java</code> like:
+                        <pre>
+package thomasmore.be.party;
+
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+public class MyErrorController implements ErrorController {
+
+    @Override
+    public String getErrorPath() {
+        return "/error";
+    }
+
+    @RequestMapping("/error")
+    public String handleError(HttpServletRequest request) {
+        // get error status
+        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        // Todo: log error details
+        if (status != null) {
+            int statusCode = Integer.parseInt(status.toString());
+
+            // display specific error page
+            if (statusCode == HttpStatus.NOT_FOUND.value()) {
+                return "404";
+            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                return "500";
+            } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
+                return "403";
+            }
+        }
+        // display generic error
+        return "error";
+    }
+}
+                        </pre>
+                        And for example <code><b>404.html</b></code> can be like this:
+                        <pre>
+&lt;!DOCTYPE html system &quot;http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd&quot;&gt;
+&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+
+&lt;head&gt;
+    &lt;div th:replace=&quot;fragments/headMetaLinksScripts :: headContent&quot; th:remove=&quot;tag&quot;&gt;&lt;/div&gt;
+    &lt;title&gt;HTTP 404&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/errorStyle.scss&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;display-1 text-center m-5&quot;&gt;Error 404&lt;/div&gt;
+    &lt;div class=&quot;h1&quot;&gt;Oh no! You are lost!&lt;/div&gt;
+    &lt;p&gt; The page you are looking for does not exist. That can happen when you follow a link to something that has since
+        been deleted. Or the link was incorrect to begin with. But you can click the button below to go back to the
+        homepage.
+    &lt;p&gt;&lt;a class=&quot;btn btn-info green&quot; href=&quot;/&quot;&gt;home page&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                        </pre>
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <p class="text-center"><i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                                    <a href="/qStartv">http://localhost:8080/kklkuol</a></p>
+                                <img src="/images/err404_Output.png" alt="Error 4040" class="centerImg">
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <h2></h2>
+
+    </div>
+</div>
+
+<footer>
+    <div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/headMetaLinksScripts :: headContent" th:remove="tag"></div>
+    <title>HTTP 404</title>
+    <link rel="stylesheet" href="/static/css/errorStyle.scss">
+</head>
+<body>
+<div class="container">
+    <div class="display-1 text-center m-5">Error 404</div>
+    <div class="h1">Oh no! You are lost!</div>
+    <p> The page you are looking for does not exist. That can happen when you follow a link to something that has since
+        been deleted. Or the link was incorrect to begin with. But you can click the button below to go back to the
+        homepage.
+    <p><a class="btn btn-info green" href="/">home page</a></p>
+</div>
+<hr>
+</body>
+</html>

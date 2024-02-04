@@ -1,0 +1,70 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Guest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/97c6a9ea35.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="row jumbotron">
+    <div class="col-md-3">
+        <h1 th:text="${appName}">App</h1>
+        <p th:text="${wMsg}">MSG</p>
+        <p th:text="|Chosen Guest: ${pGuests[pGuestID]}|">MSG</p>
+    </div>
+    <div class="col-md-3" >
+        <table class="table table-dark" >
+            <caption>List of Male-Guests</caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr th:each="pg: ${pGuests}" th:if="${pg.gender eq 'Male'}">
+                <td th:text="${pg.getId()}">0</td>
+                <td th:text="${pg.getName()}">Guest-Name</td>
+                <td th:text="${pg.getGender()}">Guest-Gender</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3">
+
+        <table class="table table-dark">
+            <caption>List of Female-Guests</caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pg: ${pGuests}" th:if="${pg.gender eq 'Female'}" >
+                <td th:text="${pg.getId()}">0</td>
+                <td th:text="${pg.getName()}">Guest-Name</td>
+                <td th:text="${pg.getGender()}">Guest-Gender</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-md-3">
+        <div th:each="user : ${pGuests}">
+            <div th:text="${user.name}"></div>
+            <div th:switch="${user.gender}">
+                <p th:case="'Female'">Female</p>
+                <p th:case="'Male'">Male</p>
+                <p th:case="*">Not specified</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

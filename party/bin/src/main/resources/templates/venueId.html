@@ -1,0 +1,26 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Venue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/97c6a9ea35.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/myStyle.css">
+</head>
+<body>
+<div id="myDIV">
+    <h1 th:text="${appName}">app</h1>
+    <h3 th:text="${wMsg}">Welcome!</h3>
+    <p class="text-secondary display-4 m-5 font-weight-bold">
+        <span th:text="|${venue.getVenueName()}|">Venue!</span> <i class="fas fa-glass-cheers"></i>
+    </p>
+    <p><a href="/#venueList2" class="text-light text-right">Back to the venue list</a></p>
+</div>
+
+<footer>
+    <a href="/" class="text-light">Go to home page</a>
+</footer>
+</body>
+</html>

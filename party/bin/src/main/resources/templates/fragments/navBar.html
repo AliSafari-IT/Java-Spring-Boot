@@ -1,0 +1,38 @@
+<!DOCTYPE html system "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+<body>
+<nav th:fragment="navBarMenu" class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/qStart">Quickstart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#PathVariables">Path Variables</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#TConditional">Conditionals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#addPrevNext">Exercises</a>
+            </li>
+        </ul>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Separated link</a>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>
